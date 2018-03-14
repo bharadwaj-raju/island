@@ -1,6 +1,7 @@
 # island
 ### Simple Island Generator and Renderer
 
+[Algorithm](#algorithm)
 
 ## Requirements
 
@@ -112,6 +113,13 @@ Run `IslandRender.py` with `--help`.
 Needs the following modules: `numpy`, `matplotlib`.
 
 Renders the island as an `x, y, z` graph using `matplotlib`. Slow.
+
+
+## Algorithm
+
+For now, only the Simplex algorithm is implemented.
+
+I made a custom Simplex generator inspired by [python-rpg's version](https://github.com/Greymerk/python-rpg/blob/master/src/world/terrain/simplex.py), since neither LibNoise, nor FastNoise provided the customization I wanted.
 
 
 ## File Formats
