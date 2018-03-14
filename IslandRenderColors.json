@@ -1,0 +1,34 @@
+{
+	/* Used for "simple" mode rendering */
+	"water": [0, 128, 200],
+	"land": [161, 215, 122],
+
+	/* Used for "color-heights" mode rendering */
+	/* Note that all elevations below specified water-level will be rendered as water anyway */
+	"color-heights": {
+		"1.0" : [203, 186, 131],
+		"0.9" : [212, 203, 158],
+		"0.8" : [223, 215, 164],
+		"0.7" : [233, 226, 183],
+		"0.6" : [240, 236, 193],
+		"0.5" : [226, 229, 182],
+		"0.4" : [210, 216, 173],
+		"0.3" : [190, 205, 151],
+		"0.2" : [169, 199, 144],
+		"0.1" : [149, 192, 140],
+		"0.0" : [0, 128, 200]
+	},
+
+	/* Used for "biome" mode rendering */
+	"biome": {
+		"water": [0, 128, 200],
+		"beach": [251, 250, 174],
+		"snow": [255, 255, 255],
+		"desert": [251, 250, 174],
+		"cold-desert": [148, 169, 174],
+		"forest": [111, 178, 82],
+		"rainforest": [82, 164, 68],
+		"grassland": [161, 215, 122],
+		"marshland": [86, 124, 44]
+	}
+}
