@@ -7,7 +7,7 @@ import os
 import sys
 
 def normalize_land_water(data, threshold=0.1):
-	
+
 	res = [[0 for i in range(len(data))] for j in range(len(data))]
 	for idv, vline in enumerate(data):
 		for idh, hcell in enumerate(vline):
@@ -40,41 +40,41 @@ def normalize_0_255(norm_0_1_data):
 def generate_simple_pixel_matrix(data, color_config):
 
 	WATER_COLOR, LAND_COLOR = color_config['water'], color_config['land']
-	
+
 	pixels = [[0 for i in range(len(data))] for i in range(len(data))]
-	
+
 	WATER_VALUE = 0
-	
+
 	for idv, vline in enumerate(data):
 		for idh, hcell in enumerate(vline):
 			pixels[idv][idh] = WATER_COLOR if (hcell == WATER_VALUE) else LAND_COLOR
-	
+
 	return pixels
 
 
 def generate_color_heights_pixel_matrix(data, color_config, threshold=0.1):
-	
+
 	pixels = [[0 for i in range(len(data))] for i in range(len(data))]
 
 	HEIGHT_COLORS = color_config['color-heights']
-	
+
 	for idv, vline in enumerate(data):
 		for idh, hcell in enumerate(vline):
 			if hcell <= threshold:
 				pixels[idv][idh] = HEIGHT_COLORS['0.0']
-			
+
 			else:
 				try:
 					pixels[idv][idh] = HEIGHT_COLORS[str(round(hcell, 1))]
-				
+
 				except KeyError:
 					pixels[idv][idh] = HEIGHT_COLORS['1.0']
-	
+
 	return pixels
 
 
 def generate_biome_pixel_matrix(elevation_data, moisture_data, color_config, threshold=0.1):
-	
+
 	def biome(elevation, moisture):
 
 		if elevation <= threshold:
@@ -93,11 +93,11 @@ def generate_biome_pixel_matrix(elevation_data, moisture_data, color_config, thr
 
 		if moisture >= 0.9:
 			return 'marshland'
-		
+
 		#if elevation < 0.4:
 		if moisture >= 0.7:
 			return 'rainforest'
-		
+
 		if elevation > 0.4:
 			if moisture >= 0.3:
 				return 'forest'
@@ -119,7 +119,7 @@ def generate_biome_pixel_matrix(elevation_data, moisture_data, color_config, thr
 
 
 def make_png_file(pixels, fname, grayscale=False):
-	
+
 	if grayscale:
 		pngimg = png.from_array(pixels, 'L')
 
@@ -131,30 +131,30 @@ def make_png_file(pixels, fname, grayscale=False):
 
 
 def make_svg_file(pixels, fname, grayscale=False):
-	
+
 	if grayscale:
 		pngimg = png.from_array(pixels, 'L')
 
 	else:
 		pngimg = png.from_array(pixels, 'RGB')
-	
+
 	pngfile = io.BytesIO()
 	pngimg.save(pngfile)
 	image = Image.open(pngfile).convert('RGB')
 	imagedata = image.load()
-	
+
 	svgdata = ''
 	svgdata += ('<?xml version="1.0" encoding="UTF-8" standalone="no"?>\n')
 	svgdata += ('<svg id="svg2" xmlns="http://www.w3.org/2000/svg" version="1.1" width="%(x)i" height="%(y)i" viewBox="0 0 %(x)i %(y)i">\n' % {'x':image.size[0], 'y':image.size[1]})
-	
+
 	for y in range(image.size[1]):
 		for x in range(image.size[0]):
 			rgb = imagedata[x, y]
 			rgb = '#%02x%02x%02x' % rgb
 			svgdata += ('<rect width="1" height="1" x="%i" y="%i" fill="%s" />\n' % (x, y, rgb))
-	
+
 	svgdata += ('</svg>\n')
-	
+
 	with open(fname, 'w') as f:
 		f.write(svgdata)
 
@@ -175,9 +175,9 @@ def main():
 		help='The height map (.hmap) file')
 
 	arg_parser.add_argument(
-		'output_file', metavar='heightmap-file', type=str,
+		'output_file', metavar='image-file', type=str,
 		help='The output image file')
-	
+
 	arg_parser.add_argument(
 		'--output-format', type=str,
 		help='The output image format (png or svg). Default: png',
@@ -203,7 +203,7 @@ def main():
 	args = arg_parser.parse_args()
 
 	print(args)
-	
+
 	data = read_data_from_hmap_file(args.heightmap_file)
 
 	color_config = ''
@@ -216,7 +216,7 @@ def main():
 
 	if args.mode == 'color-heights':
 		pixels = generate_color_heights_pixel_matrix(data, color_config, threshold=args.water_level)
-	
+
 	elif args.mode == 'simple':
 		pixels = generate_simple_pixel_matrix(normalize_land_water(data, threshold=args.water_level), color_config)
 
